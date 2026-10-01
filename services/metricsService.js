@@ -1,0 +1,26 @@
+const os = require("os");
+const HISTORY_LEN = 24;
+const latencyHistory = Array.from({ length: HISTORY_LEN }, (_, i) => ({ time: `${i}:00`, value: Math.floor(Math.random() * 40 + 20) }));
+const rpmHistory = Array.from({ length: HISTORY_LEN }, (_, i) => ({ time: `${i}:00`, value: Math.floor(Math.random() * 3000 + 1000) }));
+let tickCount = 0;
+const pushHistory = (arr, value, label) => { arr.push({ time: label, value }); if (arr.length > HISTORY_LEN) arr.shift(); };
+const getSystemMetrics = () => {
+  tickCount++;
+  const now = new Date();
+  const label = `${now.getHours()}:${String(now.getMinutes()).padStart(2, "0")}`;
+  const totalMem = os.totalmem();
+  const freeMem = os.freemem();
+  const usedMem = totalMem - freeMem;
+  const memPct = parseFloat(((usedMem / totalMem) * 100).toFixed(1));
+  const cpuLoad = os.loadavg()[0];
+  const cpuCores = os.cpus().length;
+  const cpuPct = Math.min(parseFloat(((cpuLoad / cpuCores) * 100).toFixed(1)), 99.9);
+  const latency = Math.floor(25 + Math.sin(tickCount * 0.3) * 12 + Math.random() * 8);
+  const rpm = Math.floor(2200 + Math.sin(tickCount * 0.15) * 400 + Math.random() * 200);
+  const cache = parseFloat((88 + Math.sin(tickCount * 0.2) * 5).toFixed(1));
+  const disk = parseFloat((62 + tickCount * 0.001).toFixed(1));
+  pushHistory(latencyHistory, latency, label);
+  pushHistory(rpmHistory, rpm, label);
+  return { cpu: cpuPct, memory: memPct, memoryUsedGB: parseFloat((usedMem / 1e9).toFixed(2)), memoryTotalGB: parseFloat((totalMem / 1e9).toFixed(2)), disk, latency, rpm, cache, uptime: parseFloat((os.uptime() / 3600).toFixed(2)), activeEngines: 4, latencyHistory: [...latencyHistory], rpmHistory: [...rpmHistory], timestamp: now.toISOString() };
+};
+module.exports = { getSystemMetrics };
