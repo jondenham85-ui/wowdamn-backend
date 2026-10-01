@@ -1,0 +1,24 @@
+# WOWDamn Backend v2.0
+
+Express.js API server for the WOWDamn Holographic Commerce Operating System.
+
+## Quick Start
+npm install && node server.js
+
+## Deploy on Render
+Connect this repo on render.com. render.yaml handles all config automatically.
+
+## Environment Variables
+- PORT=10000
+- NODE_ENV=production
+- JWT_SECRET=(generate a 64-char hex string)
+- MONGODB_URI=(optional — falls back to in-memory mock data)
+- FRONTEND_URL=https://wowdamn.vercel.app
+
+## Test Login Credentials
+- Owner: jon@wowdamn.com / wowdamn2024!
+- CEO: ceo@wowdamn.com / ceomode2024!
+- Admin: admin@wowdamn.com / admin2024!
+
+## Health Check
+GET /api/health
